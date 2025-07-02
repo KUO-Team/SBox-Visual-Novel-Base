@@ -31,4 +31,6 @@ docs/doxygen/bin/
 
 # Libraries
 libraries/*
+libraries/**/obj/
+libraries/**/Properties/
 !libraries/VNBase/
