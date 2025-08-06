@@ -1,4 +1,4 @@
-(label start
+(label beginning
     (text "What's your name?")
 
     // Input allows us to display an input box.
@@ -12,10 +12,10 @@
     // We interpolate the variable "name" into the text.
     // This is done by using curly braces around the variable name.
     (text "So your name is {name}, huh? Nice to meet you!")
-	(after load-script /Scripts/ExampleScript.vnscript)
+	(after load /Scripts/ExampleScript.vnscript)
 )
 
 // We store the player's name so we can use it later.
 // The default value here is "Garry".
 (set name "Garry")
-(start-dialogue start)
+(start beginning)

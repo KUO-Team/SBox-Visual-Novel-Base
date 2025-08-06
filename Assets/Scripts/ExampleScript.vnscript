@@ -6,7 +6,7 @@
 	You can use them to mark things further.
 */
 
-(label start
+(label beginning
 	(text "Which example do you want to load?")
 	(choice "Story Example" jump load-storyscript)
 	(choice "Condition Example" jump load-conditionscript)
@@ -15,24 +15,24 @@
 
 (label load-storyscript
 	(text "Loading story example")
-	(after load-script /Scripts/StoryExample.vnscript)
+	(after load /Scripts/StoryExample.vnscript)
 )
 
 (label load-conditionscript
 	(text "Loading condition example")
-	(after load-script /Scripts/ConditionExample.vnscript)
+	(after load /Scripts/ConditionExample.vnscript)
 )
 
 (label load-inputscript
 	(text "Loading input example")
-	(after load-script /Scripts/InputExample.vnscript)
+	(after load /Scripts/InputExample.vnscript)
 )
 
 /* 
-	start-dialogue is a unique keyword which
+	start is a unique keyword which
 	marks the starting label of the script.
 
 	It's required, because otherwise the script
 	won't know where to start.
 */
-(start-dialogue start)
+(start beginning)

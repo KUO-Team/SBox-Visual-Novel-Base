@@ -1,4 +1,4 @@
-(label start
+(label beginning
     (text "What Now?")
     (choice "Unlock Secret Ending" cond (= secret-ending-unlocked false) jump unlock-secret)
     (choice "Normal Ending" jump normal-ending)
@@ -12,18 +12,18 @@
 
     // After processing this label, we set the secret-ending variable to true,
     // and jump back to the start label.
-    (after (set secret-ending-unlocked true) jump start)
+    (after (set secret-ending-unlocked true) jump beginning)
 )
 
 (label normal-ending
     (text "Normal Ending!")
-	(after load-script /Scripts/ExampleScript.vnscript)
+	(after load /Scripts/ExampleScript.vnscript)
 )
 
 (label secret-ending
     (text "Secret Ending!")
-	(after load-script /Scripts/ExampleScript.vnscript)
+	(after load /Scripts/ExampleScript.vnscript)
 )
 
 (set secret-ending-unlocked false)
-(start-dialogue start)
+(start beginning)

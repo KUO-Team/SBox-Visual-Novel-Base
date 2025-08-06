@@ -65,7 +65,7 @@
 (label sit-down
 	(text "You sit down to admire your surroundings. It's truly beautiful. You rest your eyes, lying on the grass and taking shade under a large tree.")
 	(bg "meadow.jpg")
-	(after load-script /Scripts/ExampleScript.vnscript)
+	(after load /Scripts/ExampleScript.vnscript)
 )
 
-(start-dialogue breezing-wind)
+(start breezing-wind)
