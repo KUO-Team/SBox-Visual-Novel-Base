@@ -145,7 +145,7 @@ public class Dialogue
 				"label", new Value.FunctionValue( CreateLabel )
 			},
 			{
-				"start-dialogue", new Value.FunctionValue( SetStartDialogue )
+				"start", new Value.FunctionValue( SetStartDialogue )
 			},
 			{
 				"set", new Value.FunctionValue( SetVariable )
@@ -209,7 +209,7 @@ public class Dialogue
 				LabelTextArgument,
 			"choice" =>
 				LabelChoiceArgument,
-			"character" =>
+			"char" =>
 				LabelCharacterArgument,
 			"sound" =>
 				LabelSoundArgument,
@@ -257,9 +257,9 @@ public class Dialogue
 				case Value.VariableReferenceValue variableReferenceValue:
 					AfterArgument afterArgument = variableReferenceValue.Name switch
 					{
-						"end-dialogue" => AfterEndDialogueArgument,
+						"end" => AfterEndDialogueArgument,
 						"jump" => AfterJumpArgument,
-						"load-script" => AfterLoadScriptArgument,
+						"load" => AfterLoadScriptArgument,
 						_ => throw new ArgumentOutOfRangeException( variableReferenceValue.Name )
 					};
 					i += afterArgument( arguments, i, label.AfterLabel );
