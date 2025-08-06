@@ -1,7 +1,9 @@
 using Sandbox;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Sandbox.Diagnostics;
 using SandLang;
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
@@ -40,6 +42,12 @@ public class Script : IAsset
 	/// </summary>
 	[Hide]
 	public Action<Dialogue.Choice>? OnChoiceSelected { get; set; }
+
+	[Hide]
+	private IEnvironment? _environment;
+
+	[JsonIgnore, Hide] 
+	private static readonly Logger Log = new("Script");
 
 	/// <summary>
 	/// Create a new empty script.
@@ -90,9 +98,6 @@ public class Script : IAsset
 		return _environment ??= new EnvironmentMap( new Dictionary<string, Value>() );
 	}
 
-	[Hide]
-	private IEnvironment? _environment;
-	
 	internal Dialogue ParseDialogue()
 	{
 		var codeBlocks = SParen.ParseText( Dialogue ).ToList();

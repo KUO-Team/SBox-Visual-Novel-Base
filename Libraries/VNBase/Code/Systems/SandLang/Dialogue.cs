@@ -18,7 +18,7 @@ public class Dialogue
 
 	internal Dictionary<Value, Value> Variables { get; } = new();
 
-	protected static Logger Log { get; } = new( "SandLang" );
+	private static Logger Log { get; } = new( "SandLang" );
 
 	/// <summary>
 	/// Represents a dialogue step.
