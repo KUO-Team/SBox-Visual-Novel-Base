@@ -32,6 +32,7 @@ public class Sound( string eventName ) : IAsset
 	/// If this asset is constructed with a SoundEvent, returns the path to the event on disk.
 	/// Otherwise, returns an empty string.
 	/// </summary>
+	[FilePath]
 	public string Path
 	{
 		get

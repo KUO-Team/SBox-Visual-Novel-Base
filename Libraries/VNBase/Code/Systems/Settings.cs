@@ -118,8 +118,7 @@ public class Settings : Component
 
 public class Input : IEquatable<InputAction>
 {
-	[InputAction] 
-	public string Action { get; set; } = string.Empty;
+	[InputAction] public string Action { get; set; } = string.Empty;
 
 	public bool Equals( InputAction? other )
 	{
@@ -131,8 +130,5 @@ public class Input : IEquatable<InputAction>
 	[Hide, JsonIgnore] public bool Down => Sandbox.Input.Down( this );
 
 	public static implicit operator string( Input input ) => input.Action;
-	public static implicit operator Input( string action ) => new()
-	{
-		Action = action
-	};
+	public static implicit operator Input( string action ) => new() { Action = action };
 }

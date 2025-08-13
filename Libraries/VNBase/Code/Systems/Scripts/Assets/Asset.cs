@@ -10,6 +10,7 @@ public interface IAsset
 	/// <summary>
 	/// The path to the asset on disk.
 	/// </summary>
+	[FilePath]
 	public string Path { get; set; }
 }
 
