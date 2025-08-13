@@ -2,6 +2,7 @@ using Sandbox;
 using Sandbox.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using VNBase;
 using VNBase.Assets;
 
@@ -27,7 +28,9 @@ public class Dialogue
 	{
 		public string Name { get; set; } = string.Empty;
 
-		public FormattableText Text { get; set; } = string.Empty;
+		public List<string> Text => FormattableText.Select( x => x.Format( Environment ) ).ToList();
+		
+		internal List<FormattableText> FormattableText { get; set; } = [];
 
 		public Input? ActiveInput { get; set; }
 
@@ -336,7 +339,8 @@ public class Dialogue
 		{
 			throw new InvalidParametersException( [arguments[1]] );
 		}
-		label.Text = argument.Text;
+    
+		label.FormattableText.Add( argument.Text );
 
 		for ( var i = 2; i < arguments.Count; i++ )
 		{
@@ -456,7 +460,8 @@ public class Dialogue
 		}
 
 		var backgroundName = argument.Text;
-		label.Assets.Add( new Background( $"{Settings.BackgroundsPath}{backgroundName}" ) );
+		var backgroundPath = $"{Settings.BackgroundsPath}{backgroundName}";
+		label.Assets.Add( new Background( backgroundPath ) );
 	}
 
 	private static void LabelInputArgument( SParen arguments, Label label )
