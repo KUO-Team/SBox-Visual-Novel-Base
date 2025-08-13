@@ -1,13 +1,8 @@
 // This file is mostly undocumented.
-// More information available on the vnbase wiki page: https://github.com/kEllieGit/SBox-Visual-Novel-Base/wiki
+// More information available on the vnbase wiki page: https://github.com/KUO-Team/SBox-Visual-Novel-Base/wiki
 
 (label breezing-wind
 	(text "A gentle breeze rustles through your hair, birds chirp melodiously, and the sun shines brightly. It's a perfect day.")
-	(bg "meadow.jpg")
-	(after jump enjoy-moment)
-)
-
-(label enjoy-moment
 	(text "You take a moment to enjoy the beautiful scenery around you. The tranquility of the meadow fills you with peace.")
 	(bg "meadow.jpg")
 	(after jump look-around)
@@ -22,42 +17,17 @@
 
 (label follow-the-path
 	(text "You follow the path for a while until you come across a small village. In the distance, you see a small house that looks abandoned. Perhaps there's something valuable inside?")
-	(bg "meadow.jpg")
-	(after jump head-towards-house)
-)
-
-(label take-the-road
-	(text "You take the road and walk for a while until you reach a bustling town. There are shops, people, and a lot of activity. Maybe you can find something interesting here?")
-	(bg "meadow.jpg")
-	(after jump explore-town)
-)
-
-(label explore-town
-	(text "You explore the town and find a market. There are various stalls selling different items. You notice a mysterious vendor selling rare artifacts.")
-	(bg "meadow.jpg")
-	(after jump visit-vendor)
-)
-
-(label visit-vendor
-	(text "You approach the vendor and browse his wares. One item catches your eye - a glowing amulet. The vendor tells you it has magical properties.")
-	(bg "meadow.jpg")
-	(after jump buy-artifact)
-)
-
-(label buy-artifact
-	(text "You grounge up whatever savings you have left to buy the amulet and attach it to your collar. Time to get going.")
+	(text "You approach the house, which appears run-down and abandoned. You notice a small window on the second floor. Your mind races with thoughts; maybe you can climb up and explore?")
+	(text "You climb up to the second floor and find a small chest. Inside, you discover a few coins and a rusty sword. You grab them, stuffing the coins into your pockets and wield the sword with your right hand.")
 	(bg "meadow.jpg")
 	(after jump sit-down)
 )
 
-(label head-towards-house
-	(text "You approach the house, which appears run-down and abandoned. You notice a small window on the second floor. Maybe you can climb up and explore?")
-	(bg "meadow.jpg")
-	(after jump climb-up-house)
-)
-
-(label climb-up-house
-	(text "You climb up to the second floor and find a small chest. Inside, you discover a few coins and a rusty sword.")
+(label take-the-road
+	(text "You take the road and walk for a while until you reach a bustling town. There are shops, people, and a lot of activity. Maybe you can find something interesting here?")
+	(text "You explore the town and find a market. There are various stalls selling different items. You notice a mysterious vendor selling rare artifacts.")
+	(text "You approach the vendor and browse his wares. One item catches your eye - a glowing amulet. The vendor tells you it has magical properties.")
+	(text "You grounge up whatever savings you have left to buy the amulet and attach it to your collar. Time to get going.")
 	(bg "meadow.jpg")
 	(after jump sit-down)
 )
