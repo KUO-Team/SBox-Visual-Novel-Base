@@ -36,7 +36,7 @@ public sealed partial class ScriptPlayer : Component
 	/// <summary>
 	/// If not empty, will load the script at this path on initial component start.
 	/// </summary>
-	[Property, Group( "Script" )]
+	[Property, Group( "Script" ), FilePath( Extension = "vnscript" )]
 	public string? InitialScript { get; set; }
 
 	/// <summary>
