@@ -101,14 +101,14 @@ public sealed partial class ScriptPlayer : Component
 			}
 			else if ( State.Choices.Count == 0 )
 			{
-				ExecuteAfterLabel();
+				AdvanceText();
 			}
 		}
 		else if ( IsAutomaticMode )
 		{
 			if ( State is { IsDialogueFinished: true, Choices.Count: 0 } )
 			{
-				ExecuteAfterLabel();
+				AdvanceText();
 			}
 		}
 	}
