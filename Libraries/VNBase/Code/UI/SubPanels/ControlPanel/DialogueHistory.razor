@@ -18,19 +18,19 @@
     <div class="history">
         @foreach ( var dialogue in Player.DialogueHistory )
         {
-            <div class="dialogue">
-                @if ( dialogue.SpeakingCharacter.IsValid() )
-                {
-                    <div class="character" style="color: @dialogue.SpeakingCharacter.NameColor.Rgba">@( dialogue.SpeakingCharacter.Name ):
-                    </div>
-                }
-                <div class="text">@dialogue.Text</div>
-            </div>
+                <div class="dialogue">
+                    @if ( dialogue.Label.SpeakingCharacter.IsValid() )
+                    {
+                        <div class="character" style="color: @dialogue.Label.SpeakingCharacter.NameColor.Rgba">@( dialogue.Label.SpeakingCharacter.Name ):
+                        </div>
+                    }
+                    <div class="text">@dialogue.Text</div>
+                </div>
         }
     </div>
 
     <div class="footer">
-        <button icon="close" onclick="@ToggleVisibility">Close</button>
+        <button icon="close" @onclick="@ToggleVisibility">Close</button>
     </div>
 </root>
 

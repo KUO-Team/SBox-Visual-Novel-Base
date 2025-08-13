@@ -41,8 +41,8 @@
     </div>
 
     <div class="footer">
-        <button icon="refresh" class="@( IsDirty() ? "" : "disabled" )" onclick="@Reset">Reset</button>
-        <button icon="close" onclick="@Hide">Close</button>
+        <button icon="refresh" class="@( IsDirty() ? "" : "disabled" )" @onclick="@Reset">Reset</button>
+        <button icon="close" @onclick="@Hide">Close</button>
     </div>
 </root>
 

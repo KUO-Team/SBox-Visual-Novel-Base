@@ -8,9 +8,9 @@
 
 <root>
     <div class="control-buttons" @ref="ControlButtons">
-        <button icon="skip_next" class="control-button @( Player?.CanSkip() == true ? "" : "disabled" )" onclick="@Skip">Skip</button>
-        <button icon="@( IsAutomaticMode ? "chat" : "autorenew" )" class="control-button @( Player?.IsAutomaticModeAvailable == true ? "" : "disabled" )" onclick="@ToggleAutomaticMode">@( IsAutomaticMode ? "Manual" : "Auto" )</button>
-        <button icon="@( UIVisible ? "visibility_off" : "visibility" )" class="control-button" onclick="@ToggleUI">@( UIVisible ? "Hide UI" : "Show UI" )</button>
+        <button icon="skip_next" class="control-button @( Player?.CanSkip() == true ? "" : "disabled" )" @onclick="@Skip">Skip</button>
+        <button icon="@( IsAutomaticMode ? "chat" : "autorenew" )" class="control-button @( Player?.IsAutomaticModeAvailable == true ? "" : "disabled" )" @onclick="@ToggleAutomaticMode">@( IsAutomaticMode ? "Manual" : "Auto" )</button>
+        <button icon="@( UIVisible ? "visibility_off" : "visibility" )" class="control-button" @onclick="@ToggleUI">@( UIVisible ? "Hide UI" : "Show UI" )</button>
         <button icon="history" class="control-button" id="DialogueHistory">History</button>
         @if ( Settings?.SettingsEnabled ?? false )
         {

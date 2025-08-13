@@ -21,7 +21,7 @@
                 string text = choice.Text;
                 var isAvailable = environment is not null && choice.IsAvailable( environment );
 
-                <button class="choice @( isAvailable ? "" : "hidden" )" onclick="@( () => ExecuteChoice( choice ) )">
+                <button class="choice @( isAvailable ? "" : "hidden" )" @onclick="@( () => ExecuteChoice( choice ) )">
                     @text
                 </button>
             }
