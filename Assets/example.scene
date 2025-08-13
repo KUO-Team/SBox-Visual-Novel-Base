@@ -3,13 +3,23 @@
   "GameObjects": [
     {
       "__guid": "c3d718bb-f649-47da-9aeb-f73006e7013b",
+      "__version": 1,
       "Flags": 0,
       "Name": "Scene Information",
+      "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
       "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "OwnerTransfer": 1,
       "Components": [
         {
           "__type": "Sandbox.SceneInformation",
           "__guid": "5bfd8ad2-a65b-4945-bec1-6ba8138d58b3",
+          "__enabled": true,
           "Author": null,
           "Changes": "",
           "Description": "",
@@ -24,19 +34,28 @@
           "Title": "example",
           "Version": null
         }
-      ]
+      ],
+      "Children": []
     },
     {
       "__guid": "75f37a7b-79ed-480b-b7d8-33aa992da0c0",
+      "__version": 1,
       "Flags": 0,
       "Name": "Player",
+      "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
       "Enabled": true,
       "NetworkMode": 1,
+      "NetworkInterpolation": true,
       "NetworkOrphaned": 1,
+      "OwnerTransfer": 1,
       "Components": [
         {
           "__type": "Sandbox.ScreenPanel",
           "__guid": "781d3d86-e7f3-4e9e-8fd6-efd61851a831",
+          "__enabled": true,
           "AutoScreenScale": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
@@ -47,19 +66,21 @@
           "Opacity": 1,
           "Scale": 1,
           "ScaleStrategy": "ConsistentHeight",
+          "TargetCamera": null,
           "ZIndex": 100
         },
         {
           "__type": "VNBase.ScriptPlayer",
           "__guid": "b88925e4-83e8-4577-9a3d-08b7f8eb9059",
-          "AutomaticMode": false,
+          "__enabled": true,
           "Hud": {
             "_type": "component",
             "component_id": "6addd3d3-fe6a-4ae2-a464-03eec35d9a15",
             "go": "75f37a7b-79ed-480b-b7d8-33aa992da0c0",
             "component_type": "VNHud"
           },
-          "InitialScript": "/scripts/examplescript.vnscript",
+          "InitialScript": "Scripts\\StoryExample.vnscript",
+          "IsAutomaticMode": false,
           "IsAutomaticModeAvailable": true,
           "IsScriptActive": true,
           "OnComponentDestroy": null,
@@ -87,6 +108,7 @@
         {
           "__type": "VNBase.Settings",
           "__guid": "b86a756c-f3a5-4df6-b838-b0dfbb8d1b27",
+          "__enabled": true,
           "ControlPanelEnabled": true,
           "HideUIInputs": [
             {
@@ -119,6 +141,7 @@
         {
           "__type": "VNBase.UI.VNHud",
           "__guid": "6addd3d3-fe6a-4ae2-a464-03eec35d9a15",
+          "__enabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -132,20 +155,28 @@
             "component_type": "ScriptPlayer"
           }
         }
-      ]
+      ],
+      "Children": []
     },
     {
       "__guid": "3ff0d10d-b515-4ff8-a1a0-7d36d8a9b284",
+      "__version": 1,
       "Flags": 0,
       "Name": "Sun",
       "Position": "-59.35651,125.7421,47.31",
       "Rotation": "0.06698729,0.25,-0.25,0.9330128",
+      "Scale": "1,1,1",
       "Tags": "light_directional,light",
       "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "OwnerTransfer": 1,
       "Components": [
         {
           "__type": "Sandbox.DirectionalLight",
           "__guid": "dc699705-7e29-4fa2-97d5-802e7b90e40b",
+          "__enabled": true,
           "FogMode": "Enabled",
           "FogStrength": 1,
           "LightColor": "0.91373,0.98039,1,1",
@@ -158,21 +189,32 @@
           "Shadows": true,
           "SkyColor": "0.05882,0.07451,0.08235,1"
         }
-      ]
+      ],
+      "Children": []
     },
     {
       "__guid": "65ca6017-ae5c-48a8-b732-7856277fcbf8",
+      "__version": 1,
       "Flags": 0,
       "Name": "Camera",
+      "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
       "Tags": "maincamera",
       "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "OwnerTransfer": 1,
       "Components": [
         {
           "__type": "Sandbox.CameraComponent",
           "__guid": "13a035ea-1ab5-4fb8-bcba-eff59d39436f",
+          "__enabled": true,
           "BackgroundColor": "0.33333,0.46275,0.52157,1",
           "ClearFlags": "All",
           "FieldOfView": 60,
+          "FovAxis": "Horizontal",
           "IsMainCamera": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
@@ -190,18 +232,14 @@
           "ZFar": 10000,
           "ZNear": 10
         }
-      ]
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
-    "FixedUpdateFrequency": 50,
-    "MaxFixedUpdates": 5,
-    "NetworkFrequency": 30,
     "NetworkInterpolation": true,
-    "PhysicsSubSteps": 1,
-    "ThreadedAnimation": true,
     "TimeScale": 1,
-    "UseFixedUpdate": true,
+    "WantsSystemScene": true,
     "Metadata": {
       "Title": "example"
     },
@@ -218,9 +256,9 @@
       "IncludedBodies": ""
     }
   },
-  "ResourceVersion": 2,
+  "ResourceVersion": 3,
   "Title": "example",
   "Description": null,
   "__references": [],
-  "__version": 2
+  "__version": 3
 }
