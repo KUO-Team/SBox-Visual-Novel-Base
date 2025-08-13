@@ -8,22 +8,22 @@
 
 (label beginning
 	(text "Which example do you want to load?")
-	(choice "Story Example" jump load-storyscript)
-	(choice "Condition Example" jump load-conditionscript)
-	(choice "Input Example" jump load-inputscript)
+	(choice "Story Example" jump storyscript)
+	(choice "Condition Example" jump conditionscript)
+	(choice "Input Example" jump inputscript)
 )
 
-(label load-storyscript
+(label storyscript
 	(text "Loading story example")
 	(after load /Scripts/StoryExample.vnscript)
 )
 
-(label load-conditionscript
+(label conditionscript
 	(text "Loading condition example")
 	(after load /Scripts/ConditionExample.vnscript)
 )
 
-(label load-inputscript
+(label inputscript
 	(text "Loading input example")
 	(after load /Scripts/InputExample.vnscript)
 )
