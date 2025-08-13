@@ -79,7 +79,7 @@
             "go": "75f37a7b-79ed-480b-b7d8-33aa992da0c0",
             "component_type": "VNHud"
           },
-          "InitialScript": "Scripts\\StoryExample.vnscript",
+          "InitialScript": "Scripts\\ExampleScript.vnscript",
           "IsAutomaticMode": false,
           "IsAutomaticModeAvailable": true,
           "IsScriptActive": true,
