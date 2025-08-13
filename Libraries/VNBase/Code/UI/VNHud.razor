@@ -30,7 +30,8 @@
 
 @code {
     #nullable enable
-    [Property, RequireComponent] public ScriptPlayer? Player { get; set; }
+    [Property, RequireComponent] 
+    private ScriptPlayer? Player { get; set; }
 
     private Dialogue.Input? Input => Player?.ActiveLabel?.ActiveInput;
     private bool ShouldShowInput => Player?.State.IsDialogueFinished == true && Input is not null;

@@ -84,7 +84,7 @@ public static class GlobalEnvironment
 	/// <summary>
 	/// Provides access to the global environment map.
 	/// </summary>
-	public static EnvironmentMap Map { get; internal set; } = new();
+	public static EnvironmentMap Map { get; private set; } = new();
 
 	/// <summary>
 	/// Clears the global environment.

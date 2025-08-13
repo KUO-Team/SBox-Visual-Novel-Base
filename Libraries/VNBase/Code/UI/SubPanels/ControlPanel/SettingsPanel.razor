@@ -78,7 +78,7 @@
         return masterVolume != 1f || anyMixerVolumeNotOne || textSpeed != Settings.TextSpeed.Normal;
     }
 
-    public void Reset()
+    private void Reset()
     {
         MasterMixer.Volume = 1f;
         

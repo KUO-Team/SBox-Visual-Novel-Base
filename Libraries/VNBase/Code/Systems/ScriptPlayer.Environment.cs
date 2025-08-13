@@ -19,7 +19,7 @@ public sealed partial class ScriptPlayer
 	/// <summary>
 	/// Sets the active dialogue environment.
 	/// </summary>
-	internal void SetEnvironment( Dialogue dialogue )
+	private void SetEnvironment( Dialogue dialogue )
 	{
 		if ( ActiveScript is null )
 		{

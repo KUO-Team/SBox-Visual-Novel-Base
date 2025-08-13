@@ -11,7 +11,7 @@ public class Sound( string eventName ) : IAsset
 	/// <summary>
 	/// The name of the <see cref="SoundEvent"/> this asset is tied to.
 	/// </summary>
-	public string EventName { get; set; } = eventName;
+	private string EventName { get; set; } = eventName;
 
 	/// <summary>
 	/// If this asset is constructed with a SoundEvent, this is that event. Otherwise, null.

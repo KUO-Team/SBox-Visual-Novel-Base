@@ -118,7 +118,8 @@ public class Settings : Component
 
 public class Input : IEquatable<InputAction>
 {
-	[InputAction] public string Action { get; set; } = string.Empty;
+	[InputAction] 
+	public string Action { get; set; } = string.Empty;
 
 	public bool Equals( InputAction? other )
 	{

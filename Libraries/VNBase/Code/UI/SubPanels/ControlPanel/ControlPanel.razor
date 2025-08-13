@@ -27,10 +27,10 @@
 
 @code {
     #nullable enable
-    public Panel? ControlButtons { get; set; }
+    private Panel? ControlButtons { get; set; }
 
     @* ReSharper disable once InconsistentNaming *@
-    public bool UIVisible { get; private set; } = true;
+    private bool UIVisible { get; set; } = true;
 
     private SubPanel? _activeSubPanel;
 
@@ -45,12 +45,12 @@
         }
     }
 
-    public void Skip()
+    private void Skip()
     {
         Player?.Skip();
     }
 
-    public void ToggleAutomaticMode()
+    private void ToggleAutomaticMode()
     {
         if ( !Player.IsValid() )
         {
@@ -61,7 +61,7 @@
     }
 
     // ReSharper disable once InconsistentNaming
-    public void ToggleUI()
+    private void ToggleUI()
     {
         // Panels that should not be hidden
         var ignoredPanels = new Type[]
@@ -81,7 +81,7 @@
         UIVisible = !UIVisible;
     }
 
-    public void ToggleSubPanel( string id )
+    private void ToggleSubPanel( string id )
     {
         var panel = GetSubPanelFromId( id );
 
