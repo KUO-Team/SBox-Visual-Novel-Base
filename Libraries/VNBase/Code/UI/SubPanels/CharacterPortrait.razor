@@ -1,6 +1,4 @@
-﻿@using System;
-@using Sandbox;
-@using VNBase.Assets;
+﻿@using Sandbox;
 
 @namespace VNBase.UI
 @inherits SubPanel
@@ -13,13 +11,3 @@
 <root class="portrait @( Player.State.SpeakingCharacter == Character ? "speaker" : "" )">
     <img src="@( $"{Character?.ActivePortraitPath}" )" alt=""/>
 </root>
-
-@code {
-    #nullable enable
-    public Character? Character { get; set; }
-
-    protected override int BuildHash()
-    {
-        return HashCode.Combine( Character, Character?.ActivePortrait, Player?.State?.SpeakingCharacter );
-    }
-}

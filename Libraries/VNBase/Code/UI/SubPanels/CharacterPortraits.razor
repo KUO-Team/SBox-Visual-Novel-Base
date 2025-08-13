@@ -1,4 +1,3 @@
-@using System;
 @using Sandbox;
 
 @namespace VNBase.UI
@@ -15,11 +14,3 @@
         <CharacterPortrait Character="@character" Player="@Player" Settings="@Settings" Hud="@Hud"/>
     }
 </root>
-
-@code {
-    #nullable enable
-    protected override int BuildHash()
-    {
-        return HashCode.Combine( Player?.State.DialogueText, Player?.State.Characters.Count );
-    }
-}

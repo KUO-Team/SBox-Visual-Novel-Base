@@ -1,5 +1,3 @@
-@using System;
-@using System.Linq;
 @using Sandbox;
 
 @namespace VNBase.UI
@@ -21,10 +19,9 @@
                 <div class="dialogue">
                     @if ( dialogue.Label.SpeakingCharacter.IsValid() )
                     {
-                        <div class="character" style="color: @dialogue.Label.SpeakingCharacter.NameColor.Rgba">@( dialogue.Label.SpeakingCharacter.Name ):
-                        </div>
+                        <div class="character" style="color: @dialogue.Label.SpeakingCharacter.NameColor.Rgba">@( dialogue.Label.SpeakingCharacter.Name ):</div>
                     }
-                    <div class="text">@dialogue.Text</div>
+                    <div class="text">@(dialogue.Text)</div>
                 </div>
         }
     </div>
@@ -33,21 +30,3 @@
         <button icon="close" @onclick="@ToggleVisibility">Close</button>
     </div>
 </root>
-
-@code {
-    #nullable enable
-    private bool IsInputPressed => Settings?.HistoryInputs.Any( x => x.Pressed ) ?? false;
-
-    public override void Tick()
-    {
-        if ( IsInputPressed )
-        {
-            ToggleVisibility();
-        }
-    }
-
-    protected override int BuildHash()
-    {
-        return HashCode.Combine( Player?.DialogueHistory.Count );
-    }
-}
