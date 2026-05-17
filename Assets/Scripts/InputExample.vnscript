@@ -16,7 +16,7 @@
     // We interpolate the variable "name" into the text.
     // This is done by using curly braces prefixed with $ around the variable name.
     (dialogue "So your name is ${name}, huh? Nice to meet you!")
-	(after load /Scripts/ExampleScript.vnscript)
+	(after load "/Scripts/ExampleScript.vnscript")
 )
 
 (start beginning)

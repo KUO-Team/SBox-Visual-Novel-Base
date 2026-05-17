@@ -19,12 +19,12 @@
 
 (label normal-ending
     (dialogue "Normal Ending!")
-	(after load /Scripts/ExampleScript.vnscript)
+	(after load "/Scripts/ExampleScript.vnscript")
 )
 
 (label secret-ending
     (dialogue "Secret Ending!")
-	(after load /Scripts/ExampleScript.vnscript)
+	(after load "/Scripts/ExampleScript.vnscript")
 )
 
 (start beginning)

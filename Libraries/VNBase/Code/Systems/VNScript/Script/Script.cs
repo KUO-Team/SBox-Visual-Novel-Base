@@ -255,7 +255,7 @@ public partial class Script
 	
 	private static void AfterLoadScriptArgument( ArgumentReader reader, After after )
 	{
-		after.ScriptPath = reader.Read<Value.VariableReferenceValue>().Name;
+		after.ScriptPath = reader.Read<Value.StringValue>().Text;
 	}
 	
 	private static void LabelChoiceArgument( SParen arguments, Label label )
