@@ -400,7 +400,7 @@ public partial class Script
 	
 	private static void LabelCharacterExpressionArgument( ArgumentReader reader, Label label, Character character )
 	{
-		character.ActivePortrait = reader.Read<Value.VariableReferenceValue>().Name;
+		character.ActivePortrait = reader.Read<Value.StringValue>().Text;
 	}
 	
 	private static void LabelSoundArgument( SParen arguments, Label label )
