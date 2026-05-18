@@ -94,7 +94,7 @@ public class Settings
 	/// <summary>
 	/// Path to character portrait images.
 	/// </summary>
-	public const string CharacterPortraitsPath = "/materials/scripts/";
+	public const string CharacterPortraitsPath = "/materials/scripts/characters/portraits/";
 	
 	/// <summary>
 	/// Path to the character resources.
