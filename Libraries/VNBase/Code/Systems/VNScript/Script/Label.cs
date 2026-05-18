@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using VNBase.Assets;
+using VNScript.State;
 
 namespace VNScript;
 
@@ -11,7 +12,7 @@ public partial class Script
 		
 		public List<Dialogue> Dialogues { get; set; } = [];
 		
-		public List<Character> Characters { get; set; } = [];
+		public List<CharacterState> Characters { get; set; } = [];
 		
 		public List<Choice> Choices { get; set; } = [];
 		

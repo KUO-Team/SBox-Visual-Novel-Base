@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using VNScript;
 
-// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable VirtualMemberCallInConstructor
 
 namespace VNBase.Assets;

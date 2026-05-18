@@ -1,8 +1,8 @@
 ﻿using Sandbox;
-using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using VNBase.Assets;
+using VNScript.State;
 using Script = VNScript.Script;
 
 namespace VNBase;
@@ -34,7 +34,7 @@ public class ScriptState
 	/// Characters to display for this label.
 	/// </summary>
 	[ReadOnly]
-	public List<Character> Characters { get; set; } = [];
+	public List<CharacterState> Characters { get; set; } = [];
 	
 	/// <summary>
 	/// The choices for this dialogue.

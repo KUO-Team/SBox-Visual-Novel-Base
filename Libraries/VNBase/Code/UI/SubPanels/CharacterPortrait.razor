@@ -9,6 +9,6 @@
     return;
 }
 
-<root class="portrait @( Player.State.SpeakingCharacter == Character ? "speaker" : "" )">
-    <img src="@( $"{Character?.ActivePortraitPath}" )" alt="Character portrait"/>
+<root class="portrait @( Player.State.SpeakingCharacter == Character.Character ? "speaker" : "" )">
+    <img src="@( $"{Character?.ActivePortraitPath}" )" alt="@( Character.Character.IsValid() ? $"{Character.Character.Name}'s" : "Character" ) portrait"/>
 </root>

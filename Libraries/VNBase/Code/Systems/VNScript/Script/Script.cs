@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using VNBase;
 using VNBase.Assets;
+using VNScript.State;
 
 namespace VNScript;
 
@@ -205,7 +206,7 @@ public partial class Script
 	private delegate void LabelArgument( SParen argument, Label label );
 	private delegate void DialogueArgument( ArgumentReader reader, Label label, Dialogue dialogue );
 	private delegate void ChoiceArgument( ArgumentReader reader, Choice choice );
-	private delegate void CharacterArgument( ArgumentReader reader, Label label, Character character );
+	private delegate void CharacterArgument( ArgumentReader reader, Label label, CharacterState character );
 	private delegate void SoundArgument( ArgumentReader reader, Label label, VNBase.Assets.Sound sound );
 	private delegate void AfterArgument( ArgumentReader reader, After after );
 	
@@ -380,7 +381,8 @@ public partial class Script
 		var characterName = ((Value.VariableReferenceValue)arguments[1]).Name;
 		var character = GetCharacterResource( characterName ) ?? throw new ResourceNotFoundException( $"Unable to add character, character resource with name {characterName} couldn't be found!", characterName );
 		
-		label.Characters.Add( character );
+		var characterState = new CharacterState { Character = character };
+		label.Characters.Add( characterState );
 		
 		var reader = new ArgumentReader( arguments, startIndex: 2 );
 		
@@ -391,16 +393,44 @@ public partial class Script
 			CharacterArgument characterArgument = keyword switch
 			{
 				"exp" => LabelCharacterExpressionArgument,
+				"pos" => LabelCharacterPositionArgument,
+				"rot" => LabelCharacterRotationArgument,
 				_ => throw new ArgumentOutOfRangeException( keyword )
 			};
 			
-			characterArgument( reader, label, character );
+			characterArgument( reader, label, characterState );
 		}
 	}
 	
-	private static void LabelCharacterExpressionArgument( ArgumentReader reader, Label label, Character character )
+	private static void LabelCharacterExpressionArgument( ArgumentReader reader, Label label, CharacterState character )
 	{
 		character.ActivePortrait = reader.Read<Value.StringValue>().Text;
+	}
+	
+	private static void LabelCharacterPositionArgument( ArgumentReader reader, Label label, CharacterState character )
+	{
+		var list = reader.Read<Value.ListValue>().ValueList;
+		
+		if ( list[0] is not Value.NumberValue xValue || list[1] is not Value.NumberValue yValue )
+		{
+			Log.Error( "Character position requires two numeric values." );
+			return;
+		}
+		
+		character.Position = new Vector2( (float)xValue.Number, (float)yValue.Number );
+	}
+	
+	private static void LabelCharacterRotationArgument( ArgumentReader reader, Label label, CharacterState character )
+	{
+		var list = reader.Read<Value.ListValue>().ValueList;
+		
+		if ( list[0] is not Value.NumberValue xValue || list[1] is not Value.NumberValue yValue || list[2] is not Value.NumberValue zValue )
+		{
+			Log.Error( "Character position requires three numeric values." );
+			return;
+		}
+		
+		character.Rotation = new Angles( (float)xValue.Number, (float)yValue.Number, (float)zValue.Number );
 	}
 	
 	private static void LabelSoundArgument( SParen arguments, Label label )

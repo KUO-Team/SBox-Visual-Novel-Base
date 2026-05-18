@@ -29,17 +29,4 @@ public sealed class Character : AssetResource
 	/// The color of the character's title.
 	/// </summary>
 	public Color TitleColor { get; set; } = Color.White;
-	
-	/// <summary>
-	/// The name of the active portrait image.
-	/// Includes extension.
-	/// </summary>
-	[JsonIgnore, Hide]
-	public string? ActivePortrait { get; set; }
-	
-	/// <summary>
-	/// Path to the active portrait image.
-	/// </summary>
-	[JsonIgnore, Hide, FilePath]
-	public string ActivePortraitPath => $"{Settings.CharacterPortraitsPath}/{Name}/{ActivePortrait}";
 }
