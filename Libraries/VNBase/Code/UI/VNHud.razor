@@ -21,12 +21,12 @@
             {
                 <SettingsPanel class="hidden" Player="@Player" Settings="@Player.Settings" Hud="@this"/>
             }
+            
+            @if ( ShouldShowInput )
+            {
+                <TextInput Player="@Player" Settings="@Player.Settings" Hud="@this"/>
+            }
         </div>
-
-        @if ( ShouldShowInput )
-        {
-            <TextInput Player="@Player" Settings="@Player.Settings" Hud="@this"/>
-        }
 
         @if ( Player.Settings.ControlPanelEnabled )
         {

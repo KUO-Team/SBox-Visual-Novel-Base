@@ -20,12 +20,11 @@ public partial class VNHud
 	private Panel? _centerContainer;
 	
 	private Script.Input? Input => Player?.ActiveLabel?.ActiveInput;
-	private bool ShouldShowInput => Player?.State.IsDialogueFinished == true && Input is not null;
+	public bool ShouldShowInput => Player?.State.IsDialogueFinished == true && Input is not null;
 	
 	protected override void OnStart()
 	{
-		// This is an ugly hack to replace default FP styles
-		StyleHack();
+		AddCustomStylesheet();
 		
 		try
 		{
@@ -57,14 +56,14 @@ public partial class VNHud
 		return list;
 	}
 	
-	private void StyleHack()
+	private void AddCustomStylesheet()
 	{
 		var root = Panel.FindRootPanel();
 		root.StyleSheet.Load( "/UI/VNHud.razor.scss" );
 	}
 	
 	/// <summary>
-	/// Elements to not allow player passthrough from. <br/>
+	/// Elements to not allow player click passthrough from. <br/>
 	/// For example, clicking on a button shouldn't advance the script.
 	/// </summary>
 	private static readonly Type[] IgnoredAdvancePassthroughElements = [typeof(Button), typeof(DropDown)];

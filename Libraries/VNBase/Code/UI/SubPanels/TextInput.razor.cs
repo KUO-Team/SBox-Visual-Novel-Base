@@ -34,6 +34,6 @@ public partial class TextInput
 	
 	protected override int BuildHash()
 	{
-		return HashCode.Combine( Player?.State.IsDialogueFinished, Player?.ActiveScript, Player?.ActiveLabel );
+		return HashCode.Combine( Player?.State.IsDialogueFinished, Player?.ActiveScript, Player?.ActiveLabel, Hud?.ShouldShowInput );
 	}
 }
