@@ -20,6 +20,8 @@ public sealed class CharacterState
 	[FilePath]
 	public string ActivePortraitPath => $"{Settings.CharacterPortraitsPath}/{Character.Name}/{ActivePortrait}";
 	
+	public bool HasManualPosition { get; set; }
+	
 	public Vector2 Position { get; set; }
 	
 	public Angles Rotation { get; set; }

@@ -417,6 +417,7 @@ public partial class Script
 			return;
 		}
 		
+		character.HasManualPosition = true;
 		character.Position = new Vector2( (float)xValue.Number, (float)yValue.Number );
 	}
 	

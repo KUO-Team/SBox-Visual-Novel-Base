@@ -10,25 +10,16 @@ public partial class CharacterPortrait
 	public CharacterState? Character { get; set; }
 	
 	[Parameter]
+	public bool HasManualPosition { get; set; }
+	
+	[Parameter]
 	public Vector2 Position
 	{
 		get;
 		set
 		{
-			var oldValue = field;
-			
-			// If we are manually changing the position, we want to do absolute positioning so
-			// that the position actually changes.
-			if ( value != oldValue )
-			{
-				Style.Position = PositionMode.Absolute;
-			}
-			else
-			{
-				Style.Position = PositionMode.Static;
-			}
-			
 			field = value;
+			
 			Style.Left = Length.Pixels( value.x );
 			Style.Top = Length.Pixels( value.y );
 		}
@@ -48,8 +39,17 @@ public partial class CharacterPortrait
 		}
 	}
 	
+	protected override void OnParametersSet()
+	{
+		Style.Position = HasManualPosition
+			? PositionMode.Absolute
+			: PositionMode.Static;
+		
+		base.OnParametersSet();
+	}
+	
 	protected override int BuildHash()
 	{
-		return HashCode.Combine( Character, Character?.ActivePortrait, Player?.State.SpeakingCharacter );
+		return HashCode.Combine( Character, Character?.ActivePortrait, Character?.Position, Character?.HasManualPosition, Character?.Rotation, Player?.State.SpeakingCharacter );
 	}
 }
