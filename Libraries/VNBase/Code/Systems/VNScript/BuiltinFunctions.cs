@@ -26,8 +26,11 @@ internal static class BuiltinFunctions
 		["sqrt"] = new Value.FunctionValue( SqrtFunction ),
 		["if"] = new Value.FunctionValue( IfFunction ),
 		["not"] = new Value.FunctionValue( NotFunction ),
-		["and"] = new Value.FunctionValue( AndFunction ),
-		["or"]  = new Value.FunctionValue( OrFunction ),
+		["and"]  = new Value.FunctionValue( AndFunction ),
+		["or"]   = new Value.FunctionValue( OrFunction ),
+		["xor"]  = new Value.FunctionValue( XorFunction ),
+		["nand"] = new Value.FunctionValue( NandFunction ),
+		["nor"]  = new Value.FunctionValue( NorFunction ),
 		["when"] = new Value.FunctionValue( WhenFunction ),
 		["body"] = new Value.FunctionValue( ExpressionBodyFunction ),
 	};
@@ -158,6 +161,31 @@ internal static class BuiltinFunctions
 		return new Value.BooleanValue( false );
 	}
 	
+	private static Value.BooleanValue XorFunction( IEnvironment environment, Value[] values )
+	{
+		var result = false;
+		
+		foreach ( var expr in values )
+		{
+			if ( expr.Evaluate( environment ).IsTruthy() )
+			{
+				result = !result;
+			}
+		}
+		
+		return new Value.BooleanValue( result );
+	}
+	
+	private static Value.BooleanValue NandFunction( IEnvironment environment, Value[] values )
+	{
+		return new Value.BooleanValue( !AndFunction( environment, values ).Boolean );
+	}
+	
+	private static Value.BooleanValue NorFunction( IEnvironment environment, Value[] values )
+	{
+		return new Value.BooleanValue( !OrFunction( environment, values ).Boolean );
+	}
+	
 	private static Value WhenFunction( IEnvironment environment, Value[] values )
 	{
 		if ( values.Length < 2 )
@@ -174,7 +202,7 @@ internal static class BuiltinFunctions
 		
 		Value last = Value.NoneValue.None;
 		
-		for ( int i = 1; i < values.Length; i++ )
+		for ( var i = 1; i < values.Length; i++ )
 		{
 			last = values[i].Evaluate( environment );
 		}
