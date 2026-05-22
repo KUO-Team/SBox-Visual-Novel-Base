@@ -6,7 +6,7 @@ namespace VNScript;
 
 public abstract record Value
 {
-	public const char GlobalPrefix = '$';
+	public const char GlobalPrefix = '@';
 	
 	public virtual Value Evaluate( IEnvironment environment )
 	{
