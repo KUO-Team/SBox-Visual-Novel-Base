@@ -267,8 +267,8 @@ internal static class BuiltinFunctions
 		
 		return new Value.NumberValue( new decimal( Math.Sqrt( (double)numVal.Number ) ) );
 	}
-	
-	private static Value.FunctionValue DefineFunction( IEnvironment environment, Value[] values )
+
+	internal static Value.FunctionValue DefineFunction( IEnvironment environment, Value[] values )
 	{
 		// Expect: (defun function-name (param1 param2 ...) (body))
 		if ( values.Length != 3 )

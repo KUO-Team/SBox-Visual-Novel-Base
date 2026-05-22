@@ -59,7 +59,15 @@ public partial class Script
 	{
 		var functionEnvironment = new EnvironmentMap();
 		
-		// Map
+		// Add all builtins so expressions can be evaluated during parse-time set calls
+		foreach ( var builtin in BuiltinFunctions.Builtins )
+		{
+			functionEnvironment.SetVariable( builtin.Key, builtin.Value );
+		}
+		
+		// These override builtins where names clash
+		// must use the script versions so variables land in Script.Variables,
+		// not the throwaway parse-time environment
 		var functions = new Dictionary<string, Value.FunctionValue>
 		{
 			{ "label", new Value.FunctionValue( CreateLabel ) },
@@ -82,7 +90,7 @@ public partial class Script
 		for ( var i = 0; i < values.Length - 1; i += 2 )
 		{
 			var key = values[i];
-			var value = values[i + 1];
+			var value = values[i + 1].Evaluate( environment );
 			Variables[key] = value;
 		}
 		
@@ -91,13 +99,9 @@ public partial class Script
 	
 	private Value.FunctionValue DefineFunction( IEnvironment environment, Value[] values )
 	{
-		// Expect: (defun function-name (param1 param2 ...) (body))
-		if ( values.Length != 3 )
-		{
-			throw ParamError.Wrong( "defun", "(defun name (params...) body)", values );
-		}
+		var functionValue = BuiltinFunctions.DefineFunction( environment, values );
 		
-		// Extract function name
+		// Also store in Variables so it survives into the runtime environment
 		var functionName = values[0] switch
 		{
 			Value.VariableReferenceValue varRef => varRef.Name,
@@ -105,51 +109,7 @@ public partial class Script
 			_ => throw ParamError.Wrong( "defun", "function name as first parameter", values )
 		};
 		
-		// Extract parameter list
-		if ( values[1] is not Value.ListValue paramList )
-		{
-			throw ParamError.Wrong( "defun", "parameter list as second parameter", values );
-		}
-		
-		// Extract body
-		if ( values[2] is not Value.ListValue body )
-		{
-			throw ParamError.Wrong( "defun", "function body as third parameter", values );
-		}
-		
-		var argNames = paramList.ValueList.Select( p => p switch
-		{
-			Value.StringValue stringValue => stringValue.Text,
-			Value.VariableReferenceValue variableReferenceValue => variableReferenceValue.Name,
-			_ => throw new InvalidParametersException( [p] )
-		} ).ToArray();
-		
-		// Create the function value
-		var functionValue = new Value.FunctionValue( ( env, arglist ) =>
-		{
-			if ( arglist.Length != argNames.Length )
-			{
-				throw new InvalidParametersException( arglist );
-			}
-			
-			var functionEnv = new EnvironmentMap( env );
-			
-			for ( var i = 0; i < argNames.Length; i++ )
-			{
-				functionEnv.SetVariable( argNames[i], arglist[i].Evaluate( env ) );
-			}
-			
-			body.Deconstruct( out var valueList );
-			
-			return valueList.Execute( functionEnv );
-		} );
-		
-		// Store the function in script variables so it's available at runtime
 		Variables[new Value.VariableReferenceValue( functionName )] = functionValue;
-		
-		// Also register in the parsing environment for use during parsing
-		environment.SetVariable( functionName, functionValue );
-		
 		return functionValue;
 	}
 	

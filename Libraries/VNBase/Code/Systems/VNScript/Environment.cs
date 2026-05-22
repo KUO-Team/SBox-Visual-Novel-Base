@@ -62,7 +62,6 @@ public class EnvironmentMap( Dictionary<string, Value> variables ) : IEnvironmen
 		if ( name.StartsWith( Value.GlobalPrefix ) )
 		{
 			GlobalEnvironment.Map._variables[name] = value;
-			
 			return;
 		}
 		
