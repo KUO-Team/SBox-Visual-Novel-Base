@@ -202,6 +202,8 @@ public sealed partial class ScriptPlayer : Component
 			return;
 		}
 		
+		_isSkipping = false;
+		
 		// Safety check. Should hopefully not cause issues.
 		if ( ActiveScript.OnChoiceSelected is not null )
 		{

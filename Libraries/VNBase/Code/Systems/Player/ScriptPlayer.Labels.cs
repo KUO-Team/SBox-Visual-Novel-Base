@@ -70,7 +70,10 @@ public sealed partial class ScriptPlayer
 			}
 			
 			// Display the current text segment
-			await DisplayCurrentTextSegment();
+			if ( !_isSkipping )
+			{
+				await DisplayCurrentTextSegment();
+			}
 		}
 		catch ( Exception e )
 		{
@@ -131,6 +134,11 @@ public sealed partial class ScriptPlayer
 	
 	private async Task DisplayCurrentTextSegment()
 	{
+		if ( _isSkipping )
+		{
+			return;
+		}
+		
 		if ( ActiveLabel is null || ActiveLabel.Dialogues.Count == 0 )
 		{
 			// No dialogues to display - go straight to after label logic
@@ -278,7 +286,7 @@ public sealed partial class ScriptPlayer
 	{
 		try
 		{
-			if ( ActiveScript is null || ActiveLabel is null )
+			if ( ActiveScript is null || ActiveLabel is null || !ReferenceEquals( label, ActiveLabel ) )
 			{
 				return;
 			}

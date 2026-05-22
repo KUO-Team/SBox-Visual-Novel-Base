@@ -4,6 +4,8 @@ namespace VNBase;
 
 public sealed partial class ScriptPlayer
 {
+	private bool _isSkipping;
+	
 	public void Skip()
 	{
 		if ( ActiveScript is null || ActiveLabel is null )
@@ -16,34 +18,68 @@ public sealed partial class ScriptPlayer
 			return;
 		}
 		
-		var currentLabel = ActiveLabel;
+		_isSkipping = true;
+		var scriptUnloaded = false;
 		
-		while ( currentLabel?.AfterLabel is not null )
+		try
 		{
-			ExecuteAfterLabel();
-			SkipDialogueEffect();
-			currentLabel = ActiveLabel;
+			var currentLabel = ActiveLabel;
 			
-			// Check if we hit input.
-			if ( currentLabel.ActiveInput is not null )
+			while ( currentLabel?.AfterLabel is not null )
 			{
+				var scriptBeforeAdvance = ActiveScript;
+				var labelBeforeAdvance = ActiveLabel;
+				ExecuteAfterLabel();
+				SkipDialogueEffect();
+				currentLabel = ActiveLabel;
+				
+				if ( ActiveScript is null || currentLabel is null )
+				{
+					scriptUnloaded = true;
+					return;
+				}
+				
+				if ( !ReferenceEquals( ActiveScript, scriptBeforeAdvance ) )
+				{
+					return;
+				}
+				
+				if ( ReferenceEquals( currentLabel, labelBeforeAdvance ) )
+				{
+					break;
+				}
+				
+				// Check if we hit input.
+				if ( currentLabel.ActiveInput is not null )
+				{
+					return;
+				}
+				
+				// Check if we hit a choice.
+				if ( currentLabel.Choices.Count > 0 )
+				{
+					return;
+				}
+				
+				if ( currentLabel.AfterLabel is null || !currentLabel.AfterLabel.IsLastLabel )
+				{
+					continue;
+				}
+				
+				scriptUnloaded = true;
+				UnloadScript();
+				
 				return;
 			}
+		}
+		finally
+		{
+			_isSkipping = false;
 			
-			// Check if we hit a choice.
-			if ( currentLabel.Choices.Count > 0 )
+			if ( !scriptUnloaded && IsScriptActive && ActiveLabel is not null )
 			{
-				return;
+				_ = DisplayCurrentTextSegment();
 			}
-			
-			if ( currentLabel.AfterLabel is null || !currentLabel.AfterLabel.IsLastLabel )
-			{
-				continue;
-			}
-			
-			UnloadScript();
-			
-			return;
 		}
 	}
 	
