@@ -42,15 +42,9 @@ public class ScriptState
 	[ReadOnly]
 	public List<Script.Choice> Choices { get; set; } = [];
 	
-	/// <summary>
-	/// Any currently playing sounds.
-	/// </summary>
 	[ReadOnly]
 	public List<Assets.Sound> Sounds { get; set; } = [];
 	
-	/// <summary>
-	/// Currently playing background music.
-	/// </summary>
 	[JsonIgnore, Hide]
 	public MusicPlayer? BackgroundMusic { get; set; }
 	

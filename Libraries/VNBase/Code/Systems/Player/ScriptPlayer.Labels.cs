@@ -195,7 +195,7 @@ public sealed partial class ScriptPlayer
 			return;
 		}
 		
-		foreach ( var sound in State.Sounds.Where( sound => sound is not Music ).ToArray() )
+		foreach ( var sound in State.Sounds.ToArray() )
 		{
 			sound.Stop();
 			State.Sounds.Remove( sound );

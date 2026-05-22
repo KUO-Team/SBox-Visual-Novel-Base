@@ -148,7 +148,8 @@ public partial class Script
 		
 		if ( BuiltInLabelArguments.TryGetValue( argumentType, out var builtInArgument ) )
 		{
-			builtInArgument( arguments, label );
+			var reader = new ArgumentReader( arguments, startIndex: 1 );
+			builtInArgument( reader, label );
 		}
 		else
 		{
@@ -163,21 +164,19 @@ public partial class Script
 		}
 	}
 	
-	private delegate void LabelArgument( SParen argument, Label label );
+	private delegate void LabelArgument( ArgumentReader reader, Label label );
 	private delegate void DialogueArgument( ArgumentReader reader, Label label, Dialogue dialogue );
 	private delegate void ChoiceArgument( ArgumentReader reader, Choice choice );
 	private delegate void CharacterArgument( ArgumentReader reader, Label label, CharacterState character );
 	private delegate void SoundArgument( ArgumentReader reader, Label label, VNBase.Assets.Sound sound );
 	private delegate void AfterArgument( ArgumentReader reader, After after );
 	
-	private static void LabelAfterArgument( SParen arguments, Label label )
+	private static void LabelAfterArgument( ArgumentReader reader, Label label )
 	{
 		if ( label.AfterLabel is null )
 		{
 			label.AfterLabel = new After();
 		}
-		
-		var reader = new ArgumentReader( arguments, startIndex: 1 );
 		
 		while ( reader.HasMore )
 		{
@@ -186,7 +185,6 @@ public partial class Script
 				case Value.ListValue listValue:
 					label.AfterLabel.CodeBlocks.Add( listValue.ValueList );
 					break;
-				
 				case Value.VariableReferenceValue { Name: var name }:
 					AfterArgument afterArgument = name switch
 					{
@@ -195,9 +193,9 @@ public partial class Script
 						"load" => AfterLoadScriptArgument,
 						_ => throw new ArgumentOutOfRangeException( name )
 					};
+					
 					afterArgument( reader, label.AfterLabel );
 					break;
-				
 				default:
 					throw new InvalidParametersException( [reader.Peek()] );
 			}
@@ -219,15 +217,14 @@ public partial class Script
 		after.ScriptPath = reader.Read<Value.StringValue>().Text;
 	}
 	
-	private static void LabelChoiceArgument( SParen arguments, Label label )
+	private static void LabelChoiceArgument( ArgumentReader reader, Label label )
 	{
 		var choice = new Choice
 		{
-			Text = ((Value.StringValue)arguments[1]).Text
+			Text = reader.Read<Value.StringValue>().Text
 		};
-		label.Choices.Add( choice );
 		
-		var reader = new ArgumentReader( arguments, startIndex: 2 );
+		label.Choices.Add( choice );
 		
 		while ( reader.HasMore )
 		{
@@ -254,9 +251,8 @@ public partial class Script
 		choice.TargetLabel = reader.Read<Value.VariableReferenceValue>().Name;
 	}
 	
-	private static void LabelDialogueArgument( SParen arguments, Label label )
+	private static void LabelDialogueArgument( ArgumentReader reader, Label label )
 	{
-		var reader = new ArgumentReader( arguments, startIndex: 1 );
 		var textParts = new List<Value>();
 		
 		// Collect text parts until we hit a keyword
@@ -273,7 +269,7 @@ public partial class Script
 		
 		if ( textParts.Count == 0 )
 		{
-			throw new InvalidParametersException( arguments.ToArray() );
+			throw new InvalidParametersException( [reader.Peek()] );
 		}
 		
 		var textBuilder = new System.Text.StringBuilder();
@@ -336,15 +332,17 @@ public partial class Script
 		dialogue.Speaker = GetCharacterResource( characterName ) ?? throw new ResourceNotFoundException( $"Unable to set speaking character, character resource with name {characterName} couldn't be found!", characterName );
 	}
 	
-	private static void LabelCharacterArgument( SParen arguments, Label label )
+	private static void LabelCharacterArgument( ArgumentReader reader, Label label )
 	{
-		var characterName = ((Value.VariableReferenceValue)arguments[1]).Name;
+		var characterName = reader.Read<Value.VariableReferenceValue>().Name;
 		var character = GetCharacterResource( characterName ) ?? throw new ResourceNotFoundException( $"Unable to add character, character resource with name {characterName} couldn't be found!", characterName );
 		
-		var characterState = new CharacterState { Character = character };
-		label.Characters.Add( characterState );
+		var characterState = new CharacterState
+		{
+			Character = character
+		};
 		
-		var reader = new ArgumentReader( arguments, startIndex: 2 );
+		label.Characters.Add( characterState );
 		
 		while ( reader.HasMore )
 		{
@@ -394,13 +392,13 @@ public partial class Script
 		character.Rotation = new Angles( (float)xValue.Number, (float)yValue.Number, (float)zValue.Number );
 	}
 	
-	private static void LabelSoundArgument( SParen arguments, Label label )
+	private static void LabelSoundArgument( ArgumentReader reader, Label label )
 	{
-		var soundName = ((Value.StringValue)arguments[1]).Text;
+		var soundName = reader.Read<Value.StringValue>().Text;
+		
 		var sound = new VNBase.Assets.Sound( soundName );
 		label.Assets.Add( sound );
-		
-		var reader = new ArgumentReader( arguments, startIndex: 2 );
+		label.Sounds.Add( sound );
 		
 		while ( reader.HasMore )
 		{
@@ -421,42 +419,34 @@ public partial class Script
 		sound.MixerName = reader.Read<Value.StringValue>().Text;
 	}
 	
-	private static void LabelMusicArgument( SParen arguments, Label label )
+	private static void LabelMusicArgument( ArgumentReader reader, Label label )
 	{
-		if ( arguments[1] is not Value.StringValue argument )
-		{
-			throw new InvalidParametersException( [arguments[1]] );
-		}
-		
-		var musicName = argument.Text;
-		label.Assets.Add( new Music( musicName ) );
+		var musicName = reader.Read<Value.StringValue>().Text;
+		var music = new Music( musicName );
+		label.Music = music;
+		label.Assets.Add( music );
 	}
 	
-	private static void LabelBackgroundArgument( SParen arguments, Label label )
+	private static void LabelBackgroundArgument( ArgumentReader reader, Label label )
 	{
-		if ( arguments[1] is not Value.StringValue argument )
-		{
-			throw new InvalidParametersException( [arguments[1]] );
-		}
-		
-		var backgroundName = argument.Text;
+		var backgroundName = reader.Read<Value.StringValue>().Text;
 		var backgroundPath = $"{Settings.BackgroundsPath}{backgroundName}";
-		label.Assets.Add( new Background( backgroundPath ) );
+		var background = new Background( backgroundPath );
+		label.Assets.Add( background );
 	}
 	
-	private static void LabelInputArgument( SParen arguments, Label label )
+	private static void LabelInputArgument( ArgumentReader reader, Label label )
 	{
-		if ( arguments[1] is not Value.VariableReferenceValue argument )
-		{
-			throw new InvalidParametersException( [arguments[1]] );
-		}
-		
 		if ( label.Choices.Count > 0 )
 		{
 			throw new InvalidOperationException( "Cannot have a text input in a label with choices!" );
 		}
 		
-		label.ActiveInput = new Input { VariableName = argument.Name };
+		var variableName = reader.Read<Value.VariableReferenceValue>();
+		label.ActiveInput = new Input
+		{
+			VariableName = variableName.Name
+		};
 	}
 	
 	private static Character? GetCharacterResource( string characterName )
