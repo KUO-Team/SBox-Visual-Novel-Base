@@ -23,10 +23,12 @@ public sealed partial class ScriptPlayer
 		try
 		{
 			// Clean up any existing text effect before starting a new one
-			SkipDialogueEffect();
+			CancelPlaybackOperation();
 			
 			ActiveLabel = label;
 			_currentTextIndex = 0; 
+			State.IsDialogueFinished = false;
+			State.Choices = [];
 			
 			if ( LoggingEnabled )
 			{
@@ -156,7 +158,12 @@ public sealed partial class ScriptPlayer
 			return;
 		}
 		
-		var activeDialogue = ActiveLabel.Dialogues[_currentTextIndex];
+		var activeLabel = ActiveLabel;
+		var textIndex = _currentTextIndex;
+		var activeDialogue = activeLabel.Dialogues[textIndex];
+		var playbackRevision = StartPlaybackOperation( out var cancellationToken );
+		State.IsDialogueFinished = false;
+		State.Choices = [];
 		State.SpeakingCharacter = activeDialogue.Speaker;
 		
 		// Use the same environment as code blocks
@@ -164,28 +171,37 @@ public sealed partial class ScriptPlayer
 		
 		if ( Settings.TextEffectEnabled )
 		{
-			_cts = new CancellationTokenSource();
-			
 			try
 			{
 				var formattedText = activeDialogue.Text.Format( environment );
 				if ( activeDialogue.Voiceline is not null )
 				{
-					PlaySoundFromLabel( ActiveLabel, activeDialogue.Voiceline );
+					PlaySoundFromLabel( activeLabel, activeDialogue.Voiceline );
 				}
 				
-				await Settings.TextEffect.Play( formattedText, (int)Settings.TextEffectSpeed, UpdateDialogueText, _cts.Token );
-				EndDialogue( activeDialogue, ActiveLabel );
+				await Settings.TextEffect.Play(
+					formattedText,
+					(int)Settings.TextEffectSpeed,
+					text => UpdateDialogueText( text, activeLabel, textIndex, playbackRevision ),
+					cancellationToken );
+				
+				if ( IsCurrentPlayback( activeLabel, textIndex, playbackRevision ) )
+				{
+					EndDialogue( activeDialogue, activeLabel, textIndex, playbackRevision );
+				}
 			}
 			catch ( OperationCanceledException )
 			{
-				EndDialogue( activeDialogue, ActiveLabel );
+				if ( IsCurrentPlayback( activeLabel, textIndex, playbackRevision ) )
+				{
+					EndDialogue( activeDialogue, activeLabel, textIndex, playbackRevision );
+				}
 			}
 		}
 		else
 		{
 			// Skip the text effect entirely
-			EndDialogue( activeDialogue, ActiveLabel );
+			EndDialogue( activeDialogue, activeLabel, textIndex, playbackRevision );
 		}
 	}
 	
@@ -195,6 +211,10 @@ public sealed partial class ScriptPlayer
 	// ReSharper disable once MemberCanBePrivate.Global
 	public void AdvanceText()
 	{
+		CancelPlaybackOperation();
+		State.IsDialogueFinished = false;
+		State.Choices = [];
+		
 		if ( ActiveLabel is null )
 		{
 			ExecuteAfterLabel();
@@ -282,40 +302,36 @@ public sealed partial class ScriptPlayer
 		SetLabel( _activeDialogue.Labels[afterLabel.TargetLabel] );
 	}
 	
-	private async void EndDialogue( Script.Dialogue dialogue, Script.Label label )
+	private bool IsCurrentPlayback( Script.Label label, int textIndex, int playbackRevision )
+	{
+		return ActiveScript is not null
+			&& ReferenceEquals( label, ActiveLabel )
+			&& _currentTextIndex == textIndex
+			&& _playbackRevision == playbackRevision;
+	}
+	
+	private async void EndDialogue( Script.Dialogue dialogue, Script.Label label, int textIndex, int playbackRevision )
 	{
 		try
 		{
-			if ( ActiveScript is null || ActiveLabel is null || !ReferenceEquals( label, ActiveLabel ) )
+			if ( !IsCurrentPlayback( label, textIndex, playbackRevision ) )
+			{
+				return;
+			}
+			
+			var activeScript = ActiveScript;
+			if ( activeScript is null )
 			{
 				return;
 			}
 			
 			// Use the same environment as code blocks
-			var environment = ActiveScript.GetEnvironment();
+			var environment = activeScript.GetEnvironment();
 			
 			// Check if this is the last dialogue in the label
-			var isLastDialogue = _currentTextIndex >= ActiveLabel.Dialogues.Count - 1;
-			
-			// If we are in Automatic Mode and there are no choices, check if we should auto-advance
-			if ( IsAutomaticMode && label.Choices.Count == 0 && !isLastDialogue )
-			{
-				try
-				{
-					await Task.DelaySeconds( Settings.AutoLabelDelay );
-					
-					// Auto-advance to next text segment or after label
-					AdvanceText();
-					
-					return;
-				}
-				catch ( OperationCanceledException )
-				{
-					State.IsDialogueFinished = false;
-				}
-			}
-			
+			var isLastDialogue = textIndex >= label.Dialogues.Count - 1;
 			var formattedText = dialogue.Text.Format( environment );
+			
 			if ( State.DialogueText != formattedText )
 			{
 				State.DialogueText = formattedText;
@@ -324,7 +340,7 @@ public sealed partial class ScriptPlayer
 			// Only set choices if this is the last dialogue
 			if ( isLastDialogue )
 			{
-				State.Choices = ActiveLabel.Choices;
+				State.Choices = label.Choices;
 			}
 			else
 			{
@@ -333,6 +349,30 @@ public sealed partial class ScriptPlayer
 			
 			State.IsDialogueFinished = true;
 			AddToDialogueHistory( dialogue, label );
+			
+			if ( IsAutomaticMode && label.Choices.Count == 0 && label.ActiveInput is null )
+			{
+				var delayRevision = StartPlaybackOperation( out var cancellationToken );
+				
+				try
+				{
+					await Task.DelaySeconds( Settings.AutoLabelDelay, cancellationToken );
+					
+					if ( !IsCurrentPlayback( label, textIndex, delayRevision ) )
+					{
+						return;
+					}
+					
+					AdvanceText();
+				}
+				catch ( OperationCanceledException )
+				{
+					if ( IsCurrentPlayback( label, textIndex, delayRevision ) )
+					{
+						State.IsDialogueFinished = false;
+					}
+				}
+			}
 		}
 		catch ( Exception e )
 		{
@@ -344,5 +384,15 @@ public sealed partial class ScriptPlayer
 	{
 		State.DialogueText = text;
 		State.IsDialogueFinished = false;
+	}
+	
+	private void UpdateDialogueText( string text, Script.Label label, int textIndex, int playbackRevision )
+	{
+		if ( !IsCurrentPlayback( label, textIndex, playbackRevision ) )
+		{
+			return;
+		}
+		
+		UpdateDialogueText( text );
 	}
 }

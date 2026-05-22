@@ -64,7 +64,8 @@ public sealed partial class ScriptPlayer : Component
 	public Settings Settings { get; } = new();
 	
 	private Script? _activeDialogue;
-	private CancellationTokenSource? _cts;
+	private CancellationTokenSource? _playbackCts;
+	private int _playbackRevision;
 	
 	/// <summary>
 	/// Value-separated by comma, list of supported script files by extension.
@@ -101,13 +102,6 @@ public sealed partial class ScriptPlayer : Component
 		if ( SkipActionPressed )
 		{
 			AdvanceOrSkipDialogueEffect();
-		}
-		else if ( IsAutomaticMode )
-		{
-			if ( State is { IsDialogueFinished: true, Choices.Count: 0 } )
-			{
-				AdvanceText();
-			}
 		}
 	}
 	
@@ -202,6 +196,7 @@ public sealed partial class ScriptPlayer : Component
 			return;
 		}
 		
+		CancelPlaybackOperation();
 		_isSkipping = false;
 		
 		// Safety check. Should hopefully not cause issues.
@@ -234,6 +229,24 @@ public sealed partial class ScriptPlayer : Component
 		}
 	}
 	
+	private int StartPlaybackOperation( out CancellationToken cancellationToken )
+	{
+		CancelPlaybackOperation();
+		
+		_playbackCts = new CancellationTokenSource();
+		cancellationToken = _playbackCts.Token;
+		return _playbackRevision;
+	}
+	
+	private void CancelPlaybackOperation()
+	{
+		_playbackRevision++;
+		
+		_playbackCts?.Cancel();
+		_playbackCts?.Dispose();
+		_playbackCts = null;
+	}
+	
 	/// <summary>
 	/// Skip the currently active text effect.
 	/// </summary>
@@ -245,14 +258,7 @@ public sealed partial class ScriptPlayer : Component
 			return;
 		}
 		
-		if ( IsAutomaticMode )
-		{
-			return;
-		}
-		
-		_cts?.Cancel();
-		_cts?.Dispose();
-		_cts = null;
+		_playbackCts?.Cancel();
 	}
 	
 	/// <summary>
@@ -266,6 +272,7 @@ public sealed partial class ScriptPlayer : Component
 		}
 		else if ( State.Choices.Count == 0 )
 		{
+			CancelPlaybackOperation();
 			AdvanceText();
 		}
 	}

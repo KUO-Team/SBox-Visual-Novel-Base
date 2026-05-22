@@ -23,6 +23,8 @@ public sealed partial class ScriptPlayer
 		
 		try
 		{
+			CancelPlaybackOperation();
+			
 			var currentLabel = ActiveLabel;
 			
 			while ( currentLabel?.AfterLabel is not null )
@@ -89,13 +91,6 @@ public sealed partial class ScriptPlayer
 	public bool CanSkip()
 	{
 		if ( ActiveScript is null || ActiveLabel is null )
-		{
-			return false;
-		}
-		
-		// TODO: Automatic mode skipping is broken. Investigate.
-		// For now we just don't allow skipping if we are in automatic mode.
-		if ( IsAutomaticMode )
 		{
 			return false;
 		}
