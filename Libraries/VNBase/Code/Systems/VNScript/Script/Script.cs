@@ -312,6 +312,7 @@ public partial class Script
 			DialogueArgument dialogueArgument = keyword switch
 			{
 				"speaker" => DialogueSpeakerArgument,
+				"voiceline" => DialogueVoicelineArgument,
 				_ => throw new ArgumentOutOfRangeException( keyword )
 			};
 			
@@ -323,13 +324,20 @@ public partial class Script
 	
 	private static bool IsDialogueKeyword( string name )
 	{
-		return name == "speaker";
+		return name is "speaker" or "voiceline";
 	}
 	
 	private static void DialogueSpeakerArgument( ArgumentReader reader, Label label, Dialogue dialogue )
 	{
 		var characterName = reader.Read<Value.VariableReferenceValue>().Name;
 		dialogue.Speaker = GetCharacterResource( characterName ) ?? throw new ResourceNotFoundException( $"Unable to set speaking character, character resource with name {characterName} couldn't be found!", characterName );
+	}
+	
+	private static void DialogueVoicelineArgument( ArgumentReader reader, Label label, Dialogue dialogue )
+	{
+		var soundName = reader.Read<Value.StringValue>().Text;
+		var sound = new VNBase.Assets.Sound( soundName );
+		dialogue.Voiceline = sound;
 	}
 	
 	private static void LabelCharacterArgument( ArgumentReader reader, Label label )
