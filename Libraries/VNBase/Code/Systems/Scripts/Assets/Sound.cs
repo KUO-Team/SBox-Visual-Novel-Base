@@ -6,12 +6,12 @@ namespace VNBase.Assets;
 /// <summary>
 /// A playable sound asset.
 /// </summary>
-public class Sound( string eventName ) : IAsset
+public class Sound : IAsset
 {
 	/// <summary>
 	/// The name of the <see cref="SoundEvent"/> this asset is tied to.
 	/// </summary>
-	public string EventName { get; set; } = eventName;
+	public string EventName { get; set; }
 	
 	/// <summary>
 	/// If this asset is constructed with a SoundEvent, this is that event. Otherwise, null.
@@ -42,6 +42,17 @@ public class Sound( string eventName ) : IAsset
 		}
 		set;
 	} = string.Empty;
+	
+	public Sound( string eventName )
+	{
+		EventName = eventName;
+	}
+	
+	public Sound( SoundEvent soundEvent )
+	{
+		EventName = soundEvent.ResourceName;
+		Event = soundEvent;
+	}
 	
 	public SoundHandle Play()
 	{
