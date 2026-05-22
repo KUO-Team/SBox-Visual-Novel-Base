@@ -60,12 +60,13 @@ public class ScriptState
 	public void Clear()
 	{
 		DialogueText = null;
-		SpeakingCharacter = null;
 		Background = null;
-		IsDialogueFinished = false;
+		SpeakingCharacter = null;
 		Characters.Clear();
 		Choices.Clear();
+		Sounds.Clear();
 		BackgroundMusic?.Stop();
 		BackgroundMusic = null;
+		IsDialogueFinished = false;
 	}
 }

@@ -24,8 +24,9 @@ public sealed partial class ScriptPlayer
 		{
 			// Clean up any existing text effect before starting a new one
 			SkipDialogueEffect();
+			
 			ActiveLabel = label;
-			_currentTextIndex = 0; // Reset text index when setting new label
+			_currentTextIndex = 0; 
 			
 			if ( LoggingEnabled )
 			{
@@ -36,49 +37,21 @@ public sealed partial class ScriptPlayer
 			// This ensures variables are set before dialogue tries to reference them
 			if ( label.AfterLabel?.CodeBlocks is not null )
 			{
-				var environment = ActiveScript?.GetEnvironment() ?? _environment;
-				
-				foreach ( var codeBlock in label.AfterLabel.CodeBlocks )
-				{
-					try
-					{
-						codeBlock.Execute( environment );
-					}
-					catch ( Exception e )
-					{
-						Log.Error( $"Error executing code block in label {label.Name}: {e.Message}" );
-					}
-				}
+				ExecuteAfterCodeBlocksFromLabel( label, label.AfterLabel );
 			}
 			
 			State.Characters.Clear();
 			label.Characters.ForEach( State.Characters.Add );
 			
-			foreach ( var sound in label.Assets.OfType<Sound>() )
+			foreach ( var sound in label.Sounds )
 			{
-				State.Sounds.Add( sound );
+				PlaySoundFromLabel( label, sound );
+			}
 				
-				if ( sound is Music )
-				{
-					State.BackgroundMusic = MusicPlayer.Play( FileSystem.Mounted, sound.EventName );
-					State.BackgroundMusic.TargetMixer = Mixer.FindMixerByName( "Music" );
-				}
-				else
-				{
-					if ( string.IsNullOrEmpty( sound.MixerName ) )
-					{
-						sound.Play();
-					}
-					else
-					{
-						sound.Play( sound.MixerName );
-					}
-				}
-				
-				if ( LoggingEnabled )
-				{
-					Log.Info( $"Played SoundAsset {sound} from label {label.Name}" );
-				}
+			var music = label.Music;
+			if ( music is not null )
+			{
+				PlayMusicFromLabel( label, music );
 			}
 			
 			try
@@ -102,6 +75,57 @@ public sealed partial class ScriptPlayer
 		catch ( Exception e )
 		{
 			Log.Error( e.Message );
+		}
+	}
+	
+	private void ExecuteAfterCodeBlocksFromLabel( Script.Label label, Script.After after )
+	{
+		var environment = ActiveScript?.GetEnvironment() ?? _environment;
+		
+		foreach ( var codeBlock in after.CodeBlocks )
+		{
+			try
+			{
+				codeBlock.Execute( environment );
+			}
+			catch ( Exception e )
+			{
+				Log.Error( $"Error executing after code block in label {label.Name}: {e.Message}" );
+			}
+		}
+	}
+	
+	private void PlaySoundFromLabel( Script.Label label, Sound soundAsset )
+	{
+		if ( !State.Sounds.Contains( soundAsset ) )
+		{
+			State.Sounds.Add( soundAsset );
+		}
+		
+		if ( string.IsNullOrEmpty( soundAsset.MixerName ) )
+		{
+			soundAsset.Play();
+		}
+		else
+		{
+			soundAsset.Play( soundAsset.MixerName );
+		}
+		
+		if ( LoggingEnabled )
+		{
+			Log.Info( $"Played SoundAsset {soundAsset} from label {label.Name}" );
+		}
+	}
+	
+	private void PlayMusicFromLabel( Script.Label label, Music musicAsset )
+	{
+		State.BackgroundMusic = MusicPlayer.Play( FileSystem.Mounted, musicAsset.Path );
+		State.BackgroundMusic.TargetMixer = Mixer.FindMixerByName( "Music" );
+		State.BackgroundMusic.ListenLocal = true;
+		
+		if ( LoggingEnabled )
+		{
+			Log.Info( $"Played MusicAsset {musicAsset} from label {label.Name}" );
 		}
 	}
 	
@@ -137,6 +161,11 @@ public sealed partial class ScriptPlayer
 			try
 			{
 				var formattedText = activeDialogue.Text.Format( environment );
+				if ( activeDialogue.Voiceline is not null )
+				{
+					PlaySoundFromLabel( ActiveLabel, activeDialogue.Voiceline );
+				}
+				
 				await Settings.TextEffect.Play( formattedText, (int)Settings.TextEffectSpeed, UpdateDialogueText, _cts.Token );
 				EndDialogue( activeDialogue, ActiveLabel );
 			}
