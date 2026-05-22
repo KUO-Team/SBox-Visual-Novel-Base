@@ -66,7 +66,7 @@ public partial class VNHud
 	/// Elements to not allow player click passthrough from. <br/>
 	/// For example, clicking on a button shouldn't advance the script.
 	/// </summary>
-	private static readonly Type[] IgnoredAdvancePassthroughElements = [typeof(Button), typeof(DropDown)];
+	private static readonly Type[] IgnoredAdvancePassthroughElements = [typeof(Button), typeof(DropDown), typeof(IconPanel), typeof(DialogueHistory), typeof(DialogueHistoryEntry)];
 	
 	// If the user clicks on the screen, allow advancing the dialogue.
 	protected override void OnMouseDown( MousePanelEvent e )
