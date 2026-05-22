@@ -338,7 +338,10 @@ public class SParen : IReadOnlyList<Value>
 								Token.CloseParen => subDepth - 1, Token.OpenParen => subDepth + 1, _ => subDepth
 							};
 							
-							if ( subDepth == 0 ) break;
+							if ( subDepth == 0 )
+							{
+								break;
+							}
 						}
 						
 						foreach ( var sub in ProcessTokens( tokenList.GetRange( tokenIndex, subToken - tokenIndex + 1 ) ) )
@@ -352,12 +355,14 @@ public class SParen : IReadOnlyList<Value>
 					
 					break;
 				case Token.Number number:
-					currentParen!._backingList.Add( new Value.NumberValue( decimal.Parse( number.Value ) ) ); break;
+					currentParen!._backingList.Add( new Value.NumberValue( decimal.Parse( number.Value ) ) );
+					break;
 				case Token.String str:
-					// String text no longer includes quotes
-					currentParen!._backingList.Add( new Value.StringValue( str.Text ) ); break;
+					currentParen!._backingList.Add( new Value.StringValue( str.Text ) );
+					break;
 				case Token.Symbol symbol:
-					currentParen!._backingList.Add( new Value.VariableReferenceValue( symbol.Name ) ); break;
+					currentParen!._backingList.Add( new Value.VariableReferenceValue( symbol.Name ) );
+					break;
 			}
 		}
 	}
