@@ -1,0 +1,22 @@
+﻿@using Sandbox
+
+@namespace VNBase.UI
+
+@inherits SubPanel
+
+<root class="dialogue">
+    <div class="left">
+        @if ( Entry.Dialogue.Speaker.IsValid() )
+        {
+            <label class="character" style="color: @Entry.Dialogue.Speaker.NameColor.Rgba" IsRich="@true">@( Entry.Dialogue.Speaker.Name ):</label>
+        }
+
+        <label class="text" IsRich="@true">@( Entry.Dialogue.Text.Format( Player.GetEnvironment() ) )</label>
+    </div>
+    <div class="right">
+        @if ( Entry.Dialogue.Voiceline is not null )
+        {
+            <i class="play-icon" onclick="@PlayDialogueVoiceline">play_arrow</i>
+        }
+    </div>
+</root>

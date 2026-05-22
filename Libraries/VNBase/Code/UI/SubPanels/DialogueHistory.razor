@@ -18,14 +18,7 @@
     <div class="history" @ref="_historyPanel">
         @foreach ( var entry in Player.DialogueHistory )
         {
-            <div class="dialogue">
-                @if ( entry.Dialogue.Speaker.IsValid() )
-                {
-                    <label class="character" style="color: @entry.Dialogue.Speaker.NameColor.Rgba">@( entry.Dialogue.Speaker.Name ):</label>
-                }
-                
-                <label class="text" IsRich="@true">@( entry.Dialogue.Text.Format( Player.GetEnvironment() ) )</label>
-            </div>
+            <DialogueHistoryEntry Entry="@entry" Hud="@Hud" Player="@Player" Settings="@Settings"></DialogueHistoryEntry>
         }
     </div>
 
