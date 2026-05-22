@@ -24,6 +24,9 @@ internal static class BuiltinFunctions
 		["defun"] = new Value.FunctionValue( DefineFunction ),
 		["pow"] = new Value.FunctionValue( PowFunction ),
 		["sqrt"] = new Value.FunctionValue( SqrtFunction ),
+		["mod"] = new Value.FunctionValue( ModFunction ),
+		["min"] = new Value.FunctionValue( MinFunction ),
+		["max"] = new Value.FunctionValue( MaxFunction ),
 		["if"] = new Value.FunctionValue( IfFunction ),
 		["not"] = new Value.FunctionValue( NotFunction ),
 		["and"]  = new Value.FunctionValue( AndFunction ),
@@ -268,6 +271,70 @@ internal static class BuiltinFunctions
 		return new Value.NumberValue( new decimal( Math.Sqrt( (double)numVal.Number ) ) );
 	}
 
+	private static Value.NumberValue ModFunction( IEnvironment environment, Value[] values )
+	{
+		var ( a, b ) = GetTwoNumbers( environment, values, "mod" );
+		
+		if ( b == 0 )
+		{
+			throw new InvalidParametersException( values );
+		}
+		
+		// Use the remainder and then adjust the sign to match the divisor (floored mod),
+		// so (mod -1 24) gives 23 rather than -1, more useful for cycles.
+		var remainder = a % b;
+		if ( remainder != 0 && remainder < 0 != b < 0 )
+		{
+			remainder += b;
+		}
+		
+		return new Value.NumberValue( remainder );
+	}
+
+	private static Value.NumberValue MinFunction( IEnvironment environment, Value[] values )
+	{
+		if ( values.Length == 0 )
+		{
+			throw ParamError.Wrong( "min", "at least one number", values );
+		}
+		
+		var evaluatedValues = values.Select( v => v.Evaluate( environment ) ).ToArray();
+		
+		if ( !evaluatedValues.All( v => v is Value.NumberValue ) )
+		{
+			throw new InvalidParametersException( evaluatedValues );
+		}
+		
+		var result = evaluatedValues
+			.Cast<Value.NumberValue>()
+			.Select( nv => nv.Number )
+			.Min();
+		
+		return new Value.NumberValue( result );
+	}
+	
+	private static Value.NumberValue MaxFunction( IEnvironment environment, Value[] values )
+	{
+		if ( values.Length == 0 )
+		{
+			throw ParamError.Wrong( "max", "at least one number", values );
+		}
+		
+		var evaluatedValues = values.Select( v => v.Evaluate( environment ) ).ToArray();
+		
+		if ( !evaluatedValues.All( v => v is Value.NumberValue ) )
+		{
+			throw new InvalidParametersException( evaluatedValues );
+		}
+		
+		var result = evaluatedValues
+			.Cast<Value.NumberValue>()
+			.Select( nv => nv.Number )
+			.Max();
+		
+		return new Value.NumberValue( result );
+	}
+	
 	internal static Value.FunctionValue DefineFunction( IEnvironment environment, Value[] values )
 	{
 		// Expect: (defun function-name (param1 param2 ...) (body))
