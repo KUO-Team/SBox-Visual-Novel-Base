@@ -42,7 +42,7 @@ public class Script : IAsset
 	public Action<VNScript.Script.Choice>? OnChoiceSelected { get; set; }
 	
 	[Hide]
-	private IEnvironment? _environment;
+	private EnvironmentMap? _environment;
 	
 	[Hide]
 	private VNScript.Script? _parsedScript;
@@ -64,7 +64,6 @@ public class Script : IAsset
 		if ( !FileSystem.Mounted.FileExists( path ) )
 		{
 			Log.Error( $"Unable to load script! Script file couldn't be found by path: {path}" );
-			
 			return;
 		}
 		
@@ -93,7 +92,7 @@ public class Script : IAsset
 	public virtual void OnUnload() { }
 	
 	/// <summary>
-	/// Get this scripts local environment map.
+	/// Get this script's local environment map.
 	/// </summary>
 	public virtual IEnvironment GetEnvironment()
 	{
