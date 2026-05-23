@@ -24,11 +24,14 @@ code/obj/
 code/properties/
 .intermediate/
 .idea/
-.vs/
+.vs/*
+.vscode/*
 code/.vs
 code/*.csproj
-docs/html
-docs/doxygen/bin/
+
+# Documentation Outputs
+Documentation/generated/
+Documentation/doxygen/bin/
 
 # Libraries
 libraries/*
