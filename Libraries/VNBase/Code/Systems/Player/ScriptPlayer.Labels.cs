@@ -35,52 +35,57 @@ public sealed partial class ScriptPlayer
 				Log.Info( $"Loading Label {label.Name}" );
 			}
 			
-			// Execute code blocks BEFORE processing dialogues
-			// This ensures variables are set before dialogue tries to reference them
-			if ( label.AfterLabel?.CodeBlocks is not null )
-			{
-				ExecuteAfterCodeBlocksFromLabel( label, label.AfterLabel );
-			}
-			
-			State.Characters.Clear();
-			label.Characters.ForEach( State.Characters.Add );
-			
-			foreach ( var sound in label.Sounds )
-			{
-				PlaySoundFromLabel( label, sound );
-			}
-				
-			var music = label.Music;
-			if ( music is not null )
-			{
-				State.StopBackgroundMusic();
-				PlayMusicFromLabel( label, music );
-			}
-			
-			try
-			{
-				State.Background = label.Assets.OfType<Background>().SingleOrDefault()?.Path;
-			}
-			catch ( InvalidOperationException )
-			{
-				Log.Error( $"There can only be one {nameof(Background)} in label {label.Name}!" );
-				State.Background = null;
-			}
-			
-			if ( _currentTextIndex == 0 )
-			{
-				OnLabelSet?.Invoke( label );
-			}
-			
-			// Display the current text segment
-			if ( !_isSkipping )
-			{
-				await DisplayCurrentTextSegment();
-			}
+			await ExecuteLabel( label );
 		}
 		catch ( Exception e )
 		{
 			Log.Error( e.Message );
+		}
+	}
+	
+	private async Task ExecuteLabel( Script.Label label )
+	{
+		// Execute code blocks BEFORE processing dialogues
+		// This ensures variables are set before dialogue tries to reference them
+		if ( label.AfterLabel?.CodeBlocks is not null )
+		{
+			ExecuteAfterCodeBlocksFromLabel( label, label.AfterLabel );
+		}
+		
+		State.Characters.Clear();
+		label.Characters.ForEach( State.Characters.Add );
+		
+		foreach ( var sound in label.Sounds )
+		{
+			PlaySoundFromLabel( label, sound );
+		}
+		
+		var music = label.Music;
+		if ( music is not null )
+		{
+			State.StopBackgroundMusic();
+			PlayMusicFromLabel( label, music );
+		}
+		
+		try
+		{
+			State.Background = label.Assets.OfType<Background>().SingleOrDefault()?.Path;
+		}
+		catch ( InvalidOperationException )
+		{
+			Log.Error( $"There can only be one {nameof(Background)} in label {label.Name}!" );
+			State.Background = null;
+		}
+		
+		if ( _currentTextIndex == 0 )
+		{
+			OnLabelSet?.Invoke( label );
+		}
+		
+		// Display the current text segment
+		if ( !_isSkipping )
+		{
+			await DisplayCurrentTextSegment();
 		}
 	}
 	
