@@ -8,6 +8,7 @@ $dialogue-history-border-radius: 10px;
 DialogueHistory {
   width: 60%;
   height: 65%;
+  z-index: 80;
   pointer-events: all;
   border-radius: 10px;
   background-color: $dialogue-history-background-color;
@@ -40,6 +41,7 @@ DialogueHistory {
 
     .dialogue {
       pointer-events: all;
+      z-index: 71;
       font-family: $dialogue-font;
       background-color: lighten($dialogue-history-background-color, 75%);
       border-radius: $dialogue-history-border-radius;
