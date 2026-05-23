@@ -16,11 +16,11 @@ public partial class Script
 		
 		public List<Choice> Choices { get; set; } = [];
 		
-		public List<IAsset> Assets { get; set; } = [];
-		
 		public List<Sound> Sounds { get; set; } = [];
 		
 		public Music? Music { get; set; }
+		
+		public BackgroundImage? BackgroundImage { get; set; }
 		
 		public Input? ActiveInput { get; set; }
 		

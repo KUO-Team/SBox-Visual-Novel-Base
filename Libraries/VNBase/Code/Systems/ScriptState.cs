@@ -22,7 +22,7 @@ public class ScriptState
 	/// Path to the currently active background image.
 	/// </summary>
 	[ImageAssetPath, ReadOnly]
-	public string? Background { get; set; }
+	public string? BackgroundImage { get; set; }
 	
 	/// <summary>
 	/// The currently active speaking character.
@@ -60,7 +60,7 @@ public class ScriptState
 	public void Clear()
 	{
 		DialogueText = null;
-		Background = null;
+		BackgroundImage = null;
 		SpeakingCharacter = null;
 		Characters.Clear();
 		Choices.Clear();

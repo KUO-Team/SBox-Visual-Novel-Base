@@ -3,4 +3,4 @@ namespace VNBase.Assets;
 /// <summary>
 /// A background image asset.
 /// </summary>
-public class Background( string path ) : Image( path );
+public class BackgroundImage( string path ) : Image( path );

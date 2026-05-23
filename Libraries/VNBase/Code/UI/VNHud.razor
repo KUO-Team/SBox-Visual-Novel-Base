@@ -8,7 +8,7 @@
 
 @if ( Player.IsValid() )
 {
-    <root class="@( Player.IsScriptActive ? "" : "hidden" )" style="background-image: url('@( Player.State.Background )')">
+    <root class="@( Player.IsScriptActive ? "" : "hidden" )" style="background-image: url('@( Player.State.BackgroundImage )')">
         <CharacterPortraits Player="@Player" Settings="@Player.Settings" Hud="@this"/>
         <Choices Player="@Player" Settings="@Player.Settings" Hud="@this"/>
         <DialogueBox Player="@Player" Settings="@Player.Settings" Hud="@this"/>

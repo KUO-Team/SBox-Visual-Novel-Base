@@ -405,7 +405,6 @@ public partial class Script
 		var soundName = reader.Read<Value.StringValue>().Text;
 		
 		var sound = new VNBase.Assets.Sound( soundName );
-		label.Assets.Add( sound );
 		label.Sounds.Add( sound );
 		
 		while ( reader.HasMore )
@@ -432,15 +431,14 @@ public partial class Script
 		var musicName = reader.Read<Value.StringValue>().Text;
 		var music = new Music( musicName );
 		label.Music = music;
-		label.Assets.Add( music );
 	}
 	
 	private static void LabelBackgroundArgument( ArgumentReader reader, Label label )
 	{
 		var backgroundName = reader.Read<Value.StringValue>().Text;
 		var backgroundPath = $"{Settings.BackgroundsPath}{backgroundName}";
-		var background = new Background( backgroundPath );
-		label.Assets.Add( background );
+		var backgroundImage = new BackgroundImage( backgroundPath );
+		label.BackgroundImage = backgroundImage;
 	}
 	
 	private static void LabelInputArgument( ArgumentReader reader, Label label )

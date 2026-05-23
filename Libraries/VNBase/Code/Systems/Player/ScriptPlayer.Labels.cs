@@ -67,14 +67,10 @@ public sealed partial class ScriptPlayer
 			PlayMusicFromLabel( label, music );
 		}
 		
-		try
+		var backgroundImage = label.BackgroundImage;
+		if ( backgroundImage is not null )
 		{
-			State.Background = label.Assets.OfType<Background>().SingleOrDefault()?.Path;
-		}
-		catch ( InvalidOperationException )
-		{
-			Log.Error( $"There can only be one {nameof(Background)} in label {label.Name}!" );
-			State.Background = null;
+			State.BackgroundImage = backgroundImage.Path;
 		}
 		
 		if ( _currentTextIndex == 0 )
