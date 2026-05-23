@@ -69,4 +69,9 @@ public class ScriptState
 		BackgroundMusic = null;
 		IsDialogueFinished = false;
 	}
+	
+	public void StopBackgroundMusic()
+	{
+		BackgroundMusic?.Stop();
+	}
 }

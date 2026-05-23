@@ -53,6 +53,7 @@ public sealed partial class ScriptPlayer
 			var music = label.Music;
 			if ( music is not null )
 			{
+				State.StopBackgroundMusic();
 				PlayMusicFromLabel( label, music );
 			}
 			
