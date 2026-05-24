@@ -1,7 +1,7 @@
 using Sandbox;
+using Sandbox.Audio;
 using Sandbox.Diagnostics;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using VNBase;
 using VNBase.Assets;
@@ -338,6 +338,22 @@ public partial class Script
 	{
 		var soundName = reader.Read<Value.StringValue>().Text;
 		var sound = new VNBase.Assets.Sound( soundName );
+		
+		// We shouldn't use the "Voice" mixer. It's meant for multiplayer voice chat.
+		// I hate the naming too and that it's defaulted, I would prefer to have games be as customizable as possible
+		// with as few default things as possible. I'm not allowed to have nice things.
+		// It's recommended to have a separate "Dialogue" mixer in your game. Let's default to that if possible.
+		// Let the player be confused. Blame FP, not me.
+		const string DialogueMixerName = "Dialogue";
+		if ( Mixer.FindMixerByName( DialogueMixerName ) is not null )
+		{
+			sound.MixerName = DialogueMixerName;
+		}
+		else
+		{
+			sound.MixerName = "Game";
+		}
+		
 		dialogue.Voiceline = sound;
 	}
 	
