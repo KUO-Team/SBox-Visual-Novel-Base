@@ -170,10 +170,9 @@ public sealed partial class ScriptPlayer : Component
 			Log.Info( $"Loading script: {scriptName}" );
 		}
 		
-		if ( Settings.StopMusicPlaybackOnUnload )
+		if ( Settings.StopMusicPlaybackOnLoad )
 		{
-			// Stop any playing background music.
-			State.BackgroundMusic?.Stop();
+			State.StopBackgroundMusic();
 		}
 		
 		ActiveScript = script;
@@ -206,6 +205,11 @@ public sealed partial class ScriptPlayer : Component
 			{
 				ActiveScript.OnChoiceSelected -= (Action<Script.Choice>)@delegate;
 			}
+		}
+		
+		if ( Settings.StopMusicPlaybackOnUnload )
+		{
+			State.StopBackgroundMusic();
 		}
 		
 		State.Clear();
