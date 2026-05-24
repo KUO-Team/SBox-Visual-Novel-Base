@@ -170,11 +170,6 @@ public sealed partial class ScriptPlayer : Component
 			Log.Info( $"Loading script: {scriptName}" );
 		}
 		
-		if ( Settings.StopMusicPlaybackOnLoad )
-		{
-			State.StopBackgroundMusic();
-		}
-		
 		ActiveScript = script;
 		_activeDialogue = ActiveScript.Parse();
 		script.OnLoad();

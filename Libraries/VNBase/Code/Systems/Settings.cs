@@ -68,12 +68,6 @@ public class Settings
 	public List<Input> HideUIInputs { get; set; } = [];
 	
 	/// <summary>
-	/// When a script is loaded, should we end previous music playback?
-	/// </summary>
-	[Property, Group( "Audio" )]
-	public bool StopMusicPlaybackOnLoad { get; set; } = true;
-	
-	/// <summary>
 	/// When a script is unloaded, should we end previous music playback?
 	/// </summary>
 	[Property, Group( "Audio" )]
