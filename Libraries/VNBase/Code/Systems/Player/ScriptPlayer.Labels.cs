@@ -127,7 +127,7 @@ public sealed partial class ScriptPlayer
 	private void PlayMusicFromLabel( Script.Label label, Music musicAsset )
 	{
 		State.BackgroundMusic = MusicPlayer.Play( FileSystem.Mounted, musicAsset.Path );
-		State.BackgroundMusic.TargetMixer = Mixer.FindMixerByName( "Music" );
+		State.BackgroundMusic.TargetMixer = Mixer.FindMixerByName( musicAsset.MixerName );
 		State.BackgroundMusic.ListenLocal = true;
 		
 		if ( LoggingEnabled )

@@ -169,6 +169,7 @@ public partial class Script
 	private delegate void ChoiceArgument( ArgumentReader reader, Choice choice );
 	private delegate void CharacterArgument( ArgumentReader reader, Label label, CharacterState character );
 	private delegate void SoundArgument( ArgumentReader reader, Label label, VNBase.Assets.Sound sound );
+	private delegate void MusicArgument( ArgumentReader reader, Label label, Music music );
 	private delegate void AfterArgument( ArgumentReader reader, After after );
 	
 	private static void LabelAfterArgument( ArgumentReader reader, Label label )
@@ -431,6 +432,24 @@ public partial class Script
 		var musicName = reader.Read<Value.StringValue>().Text;
 		var music = new Music( musicName );
 		label.Music = music;
+		
+		while ( reader.HasMore )
+		{
+			var keyword = reader.Read<Value.VariableReferenceValue>().Name;
+			
+			MusicArgument musicArgument = keyword switch
+			{
+				"mixer" => MusicMixerArgument,
+				_ => throw new ArgumentOutOfRangeException( keyword )
+			};
+			
+			musicArgument( reader, label, music );
+		}
+	}
+	
+	private static void MusicMixerArgument( ArgumentReader reader, Label label, Music music )
+	{
+		music.MixerName = reader.Read<Value.StringValue>().Text;
 	}
 	
 	private static void LabelBackgroundArgument( ArgumentReader reader, Label label )
