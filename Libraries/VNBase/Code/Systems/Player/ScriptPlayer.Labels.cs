@@ -109,14 +109,7 @@ public sealed partial class ScriptPlayer
 			State.Sounds.Add( soundAsset );
 		}
 		
-		if ( string.IsNullOrEmpty( soundAsset.MixerName ) )
-		{
-			soundAsset.Play();
-		}
-		else
-		{
-			soundAsset.Play( soundAsset.MixerName );
-		}
+		soundAsset.Play( soundAsset.MixerName );
 		
 		if ( LoggingEnabled )
 		{

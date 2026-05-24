@@ -27,7 +27,7 @@ public class Sound : IAsset
 	/// <summary>
 	/// The name of the target mixer.
 	/// </summary>
-	public string MixerName { get; set; } = string.Empty;
+	public string MixerName { get; set; } = "Game";
 	
 	/// <summary>
 	/// If this asset is constructed with a SoundEvent, returns the path to the event on disk.
